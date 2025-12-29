@@ -71,28 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const adminToggle = document.getElementById('adminToggle');
     const adminPanel = document.getElementById('adminPanel');
     const clearFormBtn = document.getElementById('clearForm');
-    const emojiPicker = document.getElementById('emojiPicker');
-    const emojiToggle = document.getElementById('emojiToggle');
-    const projectIconInput = document.getElementById('projectIcon');
-
-    // Emoji Picker 開關
-    emojiToggle.addEventListener('click', () => {
-        const isHidden = emojiPicker.style.display === 'none';
-        emojiPicker.style.display = isHidden ? 'flex' : 'none';
-    });
-
-    // Emoji Picker 點擊事件
-    emojiPicker.addEventListener('click', (e) => {
-        if (e.target.classList.contains('emoji-btn')) {
-            const emoji = e.target.dataset.emoji;
-            projectIconInput.value = emoji;
-            // 更新選中狀態
-            emojiPicker.querySelectorAll('.emoji-btn').forEach(btn => btn.classList.remove('selected'));
-            e.target.classList.add('selected');
-            // 選完後自動收合
-            emojiPicker.style.display = 'none';
-        }
-    });
+    const projectIconSelect = document.getElementById('projectIcon');
 
     // 監聽 Firebase 資料變化
     projectsRef.on('value', (snapshot) => {
