@@ -44,9 +44,9 @@ const projects = [
     // ========== Streamlit 專案 ==========
     {
         id: 5,
-        name: "策略回測平台",
-        description: "完整版回測系統，參數優化、Firebase 儲存策略",
-        icon: "📈",
+        name: "高級回測系統 Pro",
+        description: "支持現貨/期貨/加密貨幣、手續費與滑價模擬、每月再平衡、逆價差收益計算",
+        icon: "�",
         type: "streamlit",
         url: "https://strategy-backtest.streamlit.app/",
         repo: "https://github.com/r381893/strategy_backtest"
