@@ -49,9 +49,12 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>圖示 (點擊選擇)</label>
-                        <input type="text" id="projectIcon" placeholder="📊" readonly>
-                        <div class="emoji-picker" id="emojiPicker">
+                        <label>圖示</label>
+                        <div class="icon-input-group">
+                            <input type="text" id="projectIcon" placeholder="📊" readonly>
+                            <button type="button" class="btn-emoji-toggle" id="emojiToggle">😀</button>
+                        </div>
+                        <div class="emoji-picker" id="emojiPicker" style="display: none;">
                             <span class="emoji-btn" data-emoji="📊">📊</span>
                             <span class="emoji-btn" data-emoji="📈">📈</span>
                             <span class="emoji-btn" data-emoji="📉">📉</span>

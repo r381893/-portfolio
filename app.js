@@ -70,11 +70,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterButtons = document.querySelectorAll('.filter-btn');
     const adminToggle = document.getElementById('adminToggle');
     const adminPanel = document.getElementById('adminPanel');
-    const closeAdmin = document.getElementById('closeAdmin');
-    const projectForm = document.getElementById('projectForm');
     const clearFormBtn = document.getElementById('clearForm');
     const emojiPicker = document.getElementById('emojiPicker');
+    const emojiToggle = document.getElementById('emojiToggle');
     const projectIconInput = document.getElementById('projectIcon');
+
+    // Emoji Picker 開關
+    emojiToggle.addEventListener('click', () => {
+        const isHidden = emojiPicker.style.display === 'none';
+        emojiPicker.style.display = isHidden ? 'flex' : 'none';
+    });
 
     // Emoji Picker 點擊事件
     emojiPicker.addEventListener('click', (e) => {
@@ -84,6 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // 更新選中狀態
             emojiPicker.querySelectorAll('.emoji-btn').forEach(btn => btn.classList.remove('selected'));
             e.target.classList.add('selected');
+            // 選完後自動收合
+            emojiPicker.style.display = 'none';
         }
     });
 
