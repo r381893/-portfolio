@@ -73,6 +73,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeAdmin = document.getElementById('closeAdmin');
     const projectForm = document.getElementById('projectForm');
     const clearFormBtn = document.getElementById('clearForm');
+    const emojiPicker = document.getElementById('emojiPicker');
+    const projectIconInput = document.getElementById('projectIcon');
+
+    // Emoji Picker 點擊事件
+    emojiPicker.addEventListener('click', (e) => {
+        if (e.target.classList.contains('emoji-btn')) {
+            const emoji = e.target.dataset.emoji;
+            projectIconInput.value = emoji;
+            // 更新選中狀態
+            emojiPicker.querySelectorAll('.emoji-btn').forEach(btn => btn.classList.remove('selected'));
+            e.target.classList.add('selected');
+        }
+    });
 
     // 監聽 Firebase 資料變化
     projectsRef.on('value', (snapshot) => {

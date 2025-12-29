@@ -408,3 +408,33 @@ footer {
         right: 0;
     }
 }
+
+/* Emoji Picker */
+.emoji-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 8px;
+    background: var(--bg-card);
+    border-radius: 8px;
+}
+
+.emoji-btn {
+    font-size: 1.4rem;
+    padding: 6px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.emoji-btn:hover {
+    background: var(--bg-card-hover);
+    transform: scale(1.2);
+}
+
+.emoji-btn.selected {
+    background: var(--accent-pwa);
+    border-radius: 6px;
+}
