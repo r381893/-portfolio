@@ -7,7 +7,7 @@
     <title>我的專案集 | Portfolio</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
-    <link rel="stylesheet" href="styles.css?v=5.0">
+    <link rel="stylesheet" href="styles.css?v=6.0">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -180,33 +180,6 @@
                 const isPlaceholder = project.type === 'future' || !project.url;
                 card.className = `project-card ${isPlaceholder ? 'placeholder' : ''}`;
 
-                if (!isPlaceholder && project.url) {
-                    // 如果是本機專案，點擊時只提示，不跳轉 (除非有特定網址)
-                    if (project.type === 'local') {
-                        card.onclick = () => {
-                            if (project.url.includes('localhost') || project.url.includes('127.0.0.1')) {
-                                // 嘗試開啟，但也許會失敗如果服務沒開
-                                alert('這是本機專案，請確保您已執行「啟動.bat」！\n\n系統將嘗試連接到：' + project.url);
-                                window.open(project.url, '_blank');
-                            } else {
-                                alert('📌 此專案為本機執行 (Local Host)\n\n請在您的電腦資料夾中找到該專案，並點擊「啟動.bat」來執行。');
-                            }
-                        };
-                    } else {
-                        card.onclick = () => window.open(project.url, '_blank');
-                    }
-                }
-
-                const tagClass = project.type;
-                let tagText = '';
-                switch (project.type) {
-                    case 'pwa': tagText = 'PWA'; break;
-                    case 'streamlit': tagText = 'Streamlit'; break;
-                    case 'local': tagText = 'Local (本機)'; break;
-                    case 'cloud': tagText = 'Cloud (雲端)'; break;
-                    default: tagText = '即將推出';
-                }
-
                 // 從 Repo URL 提取資料夾名稱
                 let folderName = '';
                 if (project.repo) {
@@ -220,7 +193,6 @@
                     iconHtml = `<div class="card-image" style="background-image: url('${project.image}')"></div>`;
                     card.classList.add('has-image');
                 } else {
-                    // 判斷是 FontAwesome 還是 Emoji
                     const isFontAwesome = (project.icon || '').includes('fa-');
                     if (isFontAwesome) {
                         iconHtml = `<i class="card-icon-fa ${project.icon}"></i>`;
@@ -239,10 +211,23 @@
             </div>
             <p class="card-description">${project.description || ''}</p>
             <div class="card-footer">
-                <span class="card-tag ${tagClass}">${tagText}</span>
+                <div class="card-actions">
+                    ${!isPlaceholder ? `
+                    <button class="action-btn local" onclick="alert('📌 本機執行指南\\n\\n1. 請打開隨身碟資料夾：${folderName || project.name}\\n2. 點擊「啟動.bat」\\n3. 程式將自動開啟！'); event.stopPropagation();">
+                        <i class="fa-solid fa-desktop"></i> 本機
+                    </button>
+                    ` : ''}
+                    
+                    ${project.url && !project.url.includes('localhost') && !isPlaceholder ? `
+                    <button class="action-btn cloud" onclick="window.open('${project.url}', '_blank'); event.stopPropagation();">
+                        <i class="fa-solid fa-cloud"></i> 雲端
+                    </button>
+                    ` : ''}
+                </div>
+
                 ${project.repo && !isPlaceholder ? `
                     <a class="card-link" href="${project.repo}" target="_blank" onclick="event.stopPropagation()">
-                        GitHub →
+                        <i class="fa-brands fa-github"></i>
                     </a>
                 ` : ''}
             </div>

@@ -289,61 +289,68 @@ header h1 {
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Tags */
-.card-tag {
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 0.75rem;
+/* Card Buttons */
+.card-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
     font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
-
-.card-tag.pwa {
-    background: rgba(52, 211, 153, 0.15);
-    color: var(--accent-pwa);
-    border: 1px solid rgba(52, 211, 153, 0.3);
-}
-
-.card-tag.streamlit {
-    background: rgba(248, 113, 113, 0.15);
-    color: var(--accent-streamlit);
-    border: 1px solid rgba(248, 113, 113, 0.3);
-}
-
-.card-tag.future {
-    background: rgba(129, 140, 248, 0.15);
-    color: var(--accent-future);
-    border: 1px solid rgba(129, 140, 248, 0.3);
-}
-
-.card-tag.local {
-    background: rgba(74, 222, 128, 0.15);
-    color: var(--accent-local);
-    border: 1px solid rgba(74, 222, 128, 0.3);
-}
-
-.card-tag.cloud {
-    background: rgba(167, 139, 250, 0.15);
-    color: var(--accent-cloud);
-    border: 1px solid rgba(167, 139, 250, 0.3);
-}
-
-.card-link {
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
     display: flex;
     align-items: center;
     gap: 6px;
+    transition: all 0.2s;
+    color: white;
+}
+
+.action-btn.local {
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: #34d399;
+}
+
+.action-btn.local:hover {
+    background: rgba(16, 185, 129, 0.4);
+    transform: translateY(-2px);
+}
+
+.action-btn.cloud {
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    color: #a78bfa;
+}
+
+.action-btn.cloud:hover {
+    background: rgba(139, 92, 246, 0.4);
+    transform: translateY(-2px);
+}
+
+/* GitHub Link (Icon only now) */
+.card-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 1.2rem;
     transition: all 0.3s;
-    padding: 6px 12px;
-    border-radius: 8px;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
 }
 
 .card-link:hover {
     color: white;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(360deg);
 }
 
 /* Admin Toggle Button */
