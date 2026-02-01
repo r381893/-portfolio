@@ -269,15 +269,20 @@
 
                 const fullPath = `${basePath}\\${folderName}`;
 
-                // 執行複製
+                // 嘗試在瀏覽器開啟該資料夾 (顯示檔案列表)
+                try {
+                    const pathForBrowser = 'file:///' + fullPath.replace(/\\/g, '/');
+                    window.open(pathForBrowser, '_blank');
+                } catch (e) {
+                    console.error("Browser blocked opening file URL");
+                }
+
+                // 執行複製 (作為備用)
                 if (navigator.clipboard) {
                     navigator.clipboard.writeText(fullPath).then(() => {
-                        alert(`✅ 路徑已複製！\n\n${fullPath}\n\n請打開檔案總管貼上並按下 Enter，然後執行「啟動.bat」。`);
-                    }).catch(() => {
-                        prompt("您的瀏覽器阻擋了自動複製，請手動複製以下路徑：", fullPath);
-                    });
-                } else {
-                    prompt("請手動複製路徑：", fullPath);
+                        // 這裡不跳 Alert 干擾了，改成 console log 或安靜失敗
+                        console.log("Path copied");
+                    }).catch(() => { });
                 }
             };
 
