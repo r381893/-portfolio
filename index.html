@@ -7,8 +7,9 @@
     <title>我的專案集 | Portfolio</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
-    <link rel="stylesheet" href="styles.css?v=4.0">
+    <link rel="stylesheet" href="styles.css?v=5.0">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
@@ -51,32 +52,30 @@
                     <input type="text" id="projectDesc" required placeholder="簡短描述專案功能">
                 </div>
 
+                <div class="form-group">
+                    <label>預覽圖片網址 (選填)</label>
+                    <input type="url" id="projectImage" placeholder="https://... (圖片將取代圖示顯示)">
+                </div>
+
                 <div class="form-row">
                     <div class="form-group">
-                        <label>圖示</label>
+                        <label>圖示 (若無圖片則顯示)</label>
                         <select id="projectIcon">
-                            <option value="📊">📊 圖表</option>
-                            <option value="📈">📈 上漲</option>
-                            <option value="📉">📉 下跌</option>
-                            <option value="💹">💹 市場</option>
-                            <option value="💰">💰 錢袋</option>
-                            <option value="💵">💵 鈔票</option>
-                            <option value="🚀">🚀 火箭</option>
-                            <option value="🎯">🎯 目標</option>
-                            <option value="🕸️">🕸️ 蜘蛛網</option>
-                            <option value="⚖️">⚖️ 天平</option>
-                            <option value="🔥">🔥 火焰</option>
-                            <option value="⚙️">⚙️ 設定</option>
-                            <option value="📥">📥 下載</option>
-                            <option value="📤">📤 上傳</option>
-                            <option value="🔄">🔄 更新</option>
-                            <option value="📋">📋 清單</option>
-                            <option value="🗂️">🗂️ 檔案</option>
-                            <option value="🔮">🔮 水晶球</option>
-                            <option value="✨">✨ 亮晶晶</option>
-                            <option value="🖥️">🖥️ 電腦</option>
-                            <option value="🐍">🐍 Python</option>
-                            <option value="☁️">☁️ Cloud</option>
+                            <option value="fa-solid fa-chart-line">📈 趨勢圖</option>
+                            <option value="fa-solid fa-chart-pie">🥧 圓餅圖</option>
+                            <option value="fa-solid fa-coins">💰 硬幣/資產</option>
+                            <option value="fa-solid fa-rocket">🚀 火箭/加速</option>
+                            <option value="fa-solid fa-robot">🤖 機器人/自動化</option>
+                            <option value="fa-solid fa-scale-balanced">⚖️ 平衡/交易</option>
+                            <option value="fa-solid fa-fire">🔥 熱門/動火</option>
+                            <option value="fa-solid fa-file-invoice">📄 表單/文件</option>
+                            <option value="fa-solid fa-book">📖 書本/知識</option>
+                            <option value="fa-solid fa-download">📥 下載工具</option>
+                            <option value="fa-solid fa-server">🖥️ 伺服器/本機</option>
+                            <option value="fa-brands fa-python">🐍 Python</option>
+                            <option value="fa-solid fa-laptop-code">💻 程式開發</option>
+                            <option value="fa-solid fa-magnifying-glass-chart">🔍 分析工具</option>
+                            <option value="fa-solid fa-layer-group">📚 專案集</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -106,7 +105,6 @@
                     <button type="button" class="btn btn-secondary" id="clearForm">清除</button>
                 </div>
             </form>
-
             <div class="admin-list" id="adminList">
                 <!-- Project list for editing -->
             </div>
@@ -122,7 +120,246 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <script src="firebase-config.js"></script>
-    <script src="app.js"></script>
+    <script>
+        /**
+         * Portfolio 主程式 - Firebase 版本
+         */
+
+        // 預設專案資料（首次使用時匯入）
+        const defaultProjects = []; // 簡化預設值，因為主要依賴 Firebase
+
+        let projects = [];
+        let currentFilter = 'all';
+        let isAdminOpen = false;
+        let editingId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('projects-container');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const adminToggle = document.getElementById('adminToggle');
+            const adminPanel = document.getElementById('adminPanel');
+            const closeAdmin = document.getElementById('closeAdmin');
+            const projectForm = document.getElementById('projectForm');
+            const clearFormBtn = document.getElementById('clearForm');
+
+            // 監聽 Firebase 資料變化
+            projectsRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    projects = Object.entries(data).map(([id, project]) => ({
+                        id,
+                        ...project
+                    })).sort((a, b) => (a.order || 999) - (b.order || 999));
+                }
+                renderProjects();
+                renderAdminList();
+            });
+
+            // 渲染專案卡片
+            function renderProjects() {
+                container.innerHTML = '';
+
+                const filteredProjects = currentFilter === 'all'
+                    ? projects
+                    : projects.filter(p => p.type === currentFilter);
+
+                if (filteredProjects.length === 0) {
+                    container.innerHTML = '<div class="loading">尚無專案</div>';
+                    return;
+                }
+
+                filteredProjects.forEach(project => {
+                    const card = createProjectCard(project);
+                    container.appendChild(card);
+                });
+            }
+
+            // 建立專案卡片
+            function createProjectCard(project) {
+                const card = document.createElement('div');
+                const isPlaceholder = project.type === 'future' || !project.url;
+                card.className = `project-card ${isPlaceholder ? 'placeholder' : ''}`;
+
+                if (!isPlaceholder && project.url) {
+                    // 如果是本機專案，點擊時只提示，不跳轉 (除非有特定網址)
+                    if (project.type === 'local') {
+                        card.onclick = () => {
+                            if (project.url.includes('localhost') || project.url.includes('127.0.0.1')) {
+                                // 嘗試開啟，但也許會失敗如果服務沒開
+                                alert('這是本機專案，請確保您已執行「啟動.bat」！\n\n系統將嘗試連接到：' + project.url);
+                                window.open(project.url, '_blank');
+                            } else {
+                                alert('📌 此專案為本機執行 (Local Host)\n\n請在您的電腦資料夾中找到該專案，並點擊「啟動.bat」來執行。');
+                            }
+                        };
+                    } else {
+                        card.onclick = () => window.open(project.url, '_blank');
+                    }
+                }
+
+                const tagClass = project.type;
+                let tagText = '';
+                switch (project.type) {
+                    case 'pwa': tagText = 'PWA'; break;
+                    case 'streamlit': tagText = 'Streamlit'; break;
+                    case 'local': tagText = 'Local (本機)'; break;
+                    case 'cloud': tagText = 'Cloud (雲端)'; break;
+                    default: tagText = '即將推出';
+                }
+
+                // 從 Repo URL 提取資料夾名稱
+                let folderName = '';
+                if (project.repo) {
+                    const parts = project.repo.split('/');
+                    folderName = parts[parts.length - 1];
+                }
+
+                // 處理圖示 vs 圖片
+                let iconHtml = '';
+                if (project.image) {
+                    iconHtml = `<div class="card-image" style="background-image: url('${project.image}')"></div>`;
+                    card.classList.add('has-image');
+                } else {
+                    // 判斷是 FontAwesome 還是 Emoji
+                    const isFontAwesome = (project.icon || '').includes('fa-');
+                    if (isFontAwesome) {
+                        iconHtml = `<i class="card-icon-fa ${project.icon}"></i>`;
+                    } else {
+                        iconHtml = `<span class="card-icon">${project.icon || '📁'}</span>`;
+                    }
+                }
+
+                card.innerHTML = `
+            <div class="card-header">
+                ${iconHtml}
+                <div class="card-title-group">
+                    <h3 class="card-title">${project.name}</h3>
+                    ${folderName ? `<span class="card-repo-name">📂 ${folderName}</span>` : ''}
+                </div>
+            </div>
+            <p class="card-description">${project.description || ''}</p>
+            <div class="card-footer">
+                <span class="card-tag ${tagClass}">${tagText}</span>
+                ${project.repo && !isPlaceholder ? `
+                    <a class="card-link" href="${project.repo}" target="_blank" onclick="event.stopPropagation()">
+                        GitHub →
+                    </a>
+                ` : ''}
+            </div>
+        `;
+
+                return card;
+            }
+
+            // 渲染管理列表
+            function renderAdminList() {
+                const adminList = document.getElementById('adminList');
+                adminList.innerHTML = '<h3>現有專案</h3>';
+
+                projects.forEach(project => {
+                    const item = document.createElement('div');
+                    item.className = 'admin-item';
+
+                    // 列表圖示處理
+                    let listIcon = '';
+                    if (project.icon && project.icon.includes('fa-')) {
+                        listIcon = `<i class="${project.icon}"></i>`;
+                    } else {
+                        listIcon = project.icon || '📁';
+                    }
+
+                    item.innerHTML = `
+                <span class="admin-item-icon">${listIcon}</span>
+                <span class="admin-item-name">${project.name}</span>
+                <div class="admin-item-actions">
+                    <button class="btn-edit" onclick="editProject('${project.id}')">✏️</button>
+                    <button class="btn-delete" onclick="deleteProject('${project.id}')">🗑️</button>
+                </div>
+            `;
+                    adminList.appendChild(item);
+                });
+            }
+
+            // 篩選按鈕
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    renderProjects();
+                });
+            });
+
+            // 管理面板開關
+            adminToggle.addEventListener('click', () => {
+                isAdminOpen = !isAdminOpen;
+                adminPanel.classList.toggle('open', isAdminOpen);
+            });
+
+            closeAdmin.addEventListener('click', () => {
+                isAdminOpen = false;
+                adminPanel.classList.remove('open');
+            });
+
+            // 表單提交
+            projectForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const projectData = {
+                    name: document.getElementById('projectName').value,
+                    description: document.getElementById('projectDesc').value,
+                    image: document.getElementById('projectImage').value, // 新增欄位
+                    icon: document.getElementById('projectIcon').value || 'fa-solid fa-folder',
+                    type: document.getElementById('projectType').value,
+                    url: document.getElementById('projectUrl').value,
+                    repo: document.getElementById('projectRepo').value,
+                    order: editingId ? projects.find(p => p.id === editingId)?.order : projects.length + 1
+                };
+
+                if (editingId) {
+                    projectsRef.child(editingId).update(projectData);
+                } else {
+                    projectsRef.push(projectData);
+                }
+
+                clearForm();
+            });
+
+            // 清除表單
+            clearFormBtn.addEventListener('click', clearForm);
+
+            function clearForm() {
+                projectForm.reset();
+                editingId = null;
+                document.getElementById('projectId').value = '';
+            }
+
+            // 全域函數
+            window.editProject = function (id) {
+                const project = projects.find(p => p.id === id);
+                if (!project) return;
+
+                editingId = id;
+                document.getElementById('projectId').value = id;
+                document.getElementById('projectName').value = project.name || '';
+                document.getElementById('projectDesc').value = project.description || '';
+                document.getElementById('projectImage').value = project.image || ''; // 新增欄位
+                document.getElementById('projectIcon').value = project.icon || '';
+                document.getElementById('projectType').value = project.type || 'pwa';
+                document.getElementById('projectUrl').value = project.url || '';
+                document.getElementById('projectRepo').value = project.repo || '';
+
+                // 滾動到表單
+                document.getElementById('projectForm').scrollIntoView({ behavior: 'smooth' });
+            };
+
+            window.deleteProject = function (id) {
+                if (confirm('確定要刪除這個專案嗎？')) {
+                    projectsRef.child(id).remove();
+                }
+            };
+        });
+    </script>
 </body>
 
 </html>
