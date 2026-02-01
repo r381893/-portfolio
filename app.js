@@ -152,10 +152,20 @@ document.addEventListener('DOMContentLoaded', () => {
             default: tagText = '即將推出';
         }
 
+        // 從 Repo URL 提取資料夾名稱
+        let folderName = '';
+        if (project.repo) {
+            const parts = project.repo.split('/');
+            folderName = parts[parts.length - 1];
+        }
+
         card.innerHTML = `
             <div class="card-header">
                 <span class="card-icon">${project.icon || '📁'}</span>
-                <h3 class="card-title">${project.name}</h3>
+                <div class="card-title-group">
+                    <h3 class="card-title">${project.name}</h3>
+                    ${folderName ? `<span class="card-repo-name">📂 ${folderName}</span>` : ''}
+                </div>
             </div>
             <p class="card-description">${project.description || ''}</p>
             <div class="card-footer">
