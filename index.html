@@ -213,8 +213,8 @@
             <div class="card-footer">
                 <div class="card-actions">
                     ${!isPlaceholder ? `
-                    <button class="action-btn local" onclick="alert('📌 本機執行指南\\n\\n1. 請打開隨身碟資料夾：${folderName || project.name}\\n2. 點擊「啟動.bat」\\n3. 程式將自動開啟！'); event.stopPropagation();">
-                        <i class="fa-solid fa-desktop"></i> 本機
+                    <button class="action-btn local" onclick="copyProjectPath('${folderName || project.name}'); event.stopPropagation();">
+                        <i class="fa-solid fa-copy"></i> 複製路徑
                     </button>
                     ` : ''}
                     
@@ -235,6 +235,51 @@
 
                 return card;
             }
+
+            // 複製路徑功能
+            window.copyProjectPath = function (folderName) {
+                // 嘗試偵測目前網頁的路徑
+                // 如果是 file:///D:/網路版/Portfolio-Main/index.html
+                // 我們要抓的是 D:\網路版\ + folderName
+
+                let basePath = "";
+                try {
+                    // 解碼 URL (處理中文路徑)
+                    const pathname = decodeURIComponent(window.location.pathname);
+
+                    // 移除開頭的 / (Windows 上 file:/// 會有 /D:/...)
+                    let rawPath = pathname.startsWith('/') ? pathname.slice(1) : pathname;
+
+                    // 取得上一層目錄 (回到 "網路版" 層級)
+                    // 目前在 Portfolio-Main，所以要往上兩層找到根，或者往上一層找到同級資料夾
+                    // 假設結構: D:\網路版\Portfolio-Main\index.html
+                    // 目標: D:\網路版\目標資料夾
+
+                    const pathParts = rawPath.split('/');
+                    // 移除 index.html
+                    pathParts.pop();
+                    // 移除 Portfolio-Main (往上一層)
+                    pathParts.pop();
+
+                    // 重組路徑 (用反斜線給 Windows)
+                    basePath = pathParts.join('\\');
+                } catch (e) {
+                    basePath = "D:\\網路版"; // Fallback
+                }
+
+                const fullPath = `${basePath}\\${folderName}`;
+
+                // 執行複製
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(fullPath).then(() => {
+                        alert(`✅ 路徑已複製！\n\n${fullPath}\n\n請打開檔案總管貼上並按下 Enter，然後執行「啟動.bat」。`);
+                    }).catch(() => {
+                        prompt("您的瀏覽器阻擋了自動複製，請手動複製以下路徑：", fullPath);
+                    });
+                } else {
+                    prompt("請手動複製路徑：", fullPath);
+                }
+            };
 
             // 渲染管理列表
             function renderAdminList() {
