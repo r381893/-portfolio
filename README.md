@@ -1,25 +1,16 @@
-# 我的專案集 Portfolio
+# 工具台（主網頁）
 
-卡片式首頁，展示我的交易分析與投資工具專案。
+個人工具入口。之後新頁面掛在這裡，當成主站分支。
 
-## 🚀 專案列表
+## 網址
 
-### PWA 版
-- 00631L 避險系統
-- 蜘蛛網策略回測
-- 台50+2 80/20投資
-- 動火作業表單
+https://r381893.github.io/-portfolio/
 
-### Streamlit 版
-- 策略回測平台
-- 長期再平衡模擬
+## 現行入口
 
-## 📝 新增專案
+- [台股 ETF 策略回測](https://r381893.github.io/tw-etf-backtest/)（正式版）
+- 個人資產追蹤、動火作業表單、圖書館借書、工程名詞、留言板
 
-編輯 `projects.js`，在 `projects` 陣列中加入新項目即可。
+## 新增工具
 
-## 🌐 部署
-
-1. Push 到 GitHub
-2. Settings → Pages → Source: main branch
-3. 網址: `https://r381893.github.io/portfolio/`
+編輯 `projects.js` 的 `HUB_TOOLS`，推上 `main` 即可。

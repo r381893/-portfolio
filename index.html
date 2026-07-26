@@ -1,400 +1,50 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
-
+<html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的專案集 | Portfolio</title>
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
-    <link rel="stylesheet" href="styles.css?v=6.0">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>r381893 · 工具台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◆</text></svg>" />
 </head>
-
 <body>
-    <div class="container">
-        <header>
-            <h1>🚀 我的專案集</h1>
-            <p class="subtitle">交易分析與投資工具</p>
-            <button class="admin-toggle-btn" id="adminToggle">⚙️ 管理</button>
-        </header>
+  <div class="bg" aria-hidden="true"></div>
 
-        <div class="filter-buttons">
-            <button class="filter-btn active" data-filter="all">全部</button>
-            <button class="filter-btn" data-filter="pwa">PWA</button>
-            <button class="filter-btn" data-filter="streamlit">Streamlit</button>
-            <button class="filter-btn" data-filter="local">本機</button>
-            <button class="filter-btn" data-filter="cloud">雲端</button>
-        </div>
+  <header class="hero">
+    <p class="eyebrow">r381893</p>
+    <h1 class="brand">工具台</h1>
+    <p class="lede">個人工具入口。交易回測、工程表單、日常小工具，都從這裡進去。</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="https://r381893.github.io/tw-etf-backtest/">打開 ETF 回測</a>
+      <a class="btn ghost" href="#tools">看全部工具</a>
+    </div>
+  </header>
 
-        <main class="projects-grid" id="projects-container">
-            <div class="loading">載入中...</div>
-        </main>
-
-        <!-- Admin Panel -->
-        <div class="admin-panel" id="adminPanel">
-            <div class="admin-header">
-                <h2>📝 專案管理</h2>
-                <button class="close-btn" id="closeAdmin">✕</button>
-            </div>
-
-            <form id="projectForm" class="project-form">
-                <input type="hidden" id="projectId">
-
-                <div class="form-group">
-                    <label>專案名稱</label>
-                    <input type="text" id="projectName" required placeholder="例如：00631L 避險系統">
-                </div>
-
-                <div class="form-group">
-                    <label>描述</label>
-                    <input type="text" id="projectDesc" required placeholder="簡短描述專案功能">
-                </div>
-
-                <div class="form-group">
-                    <label>預覽圖片網址 (選填)</label>
-                    <input type="url" id="projectImage" placeholder="https://... (圖片將取代圖示顯示)">
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>圖示 (若無圖片則顯示)</label>
-                        <select id="projectIcon">
-                            <option value="fa-solid fa-chart-line">📈 趨勢圖</option>
-                            <option value="fa-solid fa-chart-pie">🥧 圓餅圖</option>
-                            <option value="fa-solid fa-coins">💰 硬幣/資產</option>
-                            <option value="fa-solid fa-rocket">🚀 火箭/加速</option>
-                            <option value="fa-solid fa-robot">🤖 機器人/自動化</option>
-                            <option value="fa-solid fa-scale-balanced">⚖️ 平衡/交易</option>
-                            <option value="fa-solid fa-fire">🔥 熱門/動火</option>
-                            <option value="fa-solid fa-file-invoice">📄 表單/文件</option>
-                            <option value="fa-solid fa-book">📖 書本/知識</option>
-                            <option value="fa-solid fa-download">📥 下載工具</option>
-                            <option value="fa-solid fa-server">🖥️ 伺服器/本機</option>
-                            <option value="fa-brands fa-python">🐍 Python</option>
-                            <option value="fa-solid fa-laptop-code">💻 程式開發</option>
-                            <option value="fa-solid fa-magnifying-glass-chart">🔍 分析工具</option>
-                            <option value="fa-solid fa-layer-group">📚 專案集</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>類型</label>
-                        <select id="projectType">
-                            <option value="pwa">PWA</option>
-                            <option value="streamlit">Streamlit</option>
-                            <option value="local">本機 (Python)</option>
-                            <option value="cloud">雲端 (Railway)</option>
-                            <option value="future">即將推出</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>網址</label>
-                    <input type="url" id="projectUrl" placeholder="https://...">
-                </div>
-
-                <div class="form-group">
-                    <label>GitHub Repo</label>
-                    <input type="url" id="projectRepo" placeholder="https://github.com/...">
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">💾 儲存</button>
-                    <button type="button" class="btn btn-secondary" id="clearForm">清除</button>
-                </div>
-            </form>
-            <div class="admin-list" id="adminList">
-                <!-- Project list for editing -->
-            </div>
-        </div>
-
-        <footer>
-            <p>© 2024 - 持續更新中</p>
-        </footer>
+  <main id="tools" class="tools">
+    <div class="section-head">
+      <h2>工具分頁</h2>
+      <p>之後新做的頁面會加在這裡，當成主站的分支入口。</p>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <div class="filters" role="tablist" aria-label="工具分類">
+      <button type="button" class="chip active" data-filter="all">全部</button>
+      <button type="button" class="chip" data-filter="finance">交易／資產</button>
+      <button type="button" class="chip" data-filter="work">工作</button>
+      <button type="button" class="chip" data-filter="other">其他</button>
+    </div>
 
-    <script src="firebase-config.js"></script>
-    <script>
-        /**
-         * Portfolio 主程式 - Firebase 版本
-         */
+    <div class="tool-list" id="toolList"></div>
+  </main>
 
-        // 預設專案資料（首次使用時匯入）
-        const defaultProjects = []; // 簡化預設值，因為主要依賴 Firebase
+  <footer class="foot">
+    <p>GitHub：<a href="https://github.com/r381893">@r381893</a>
+      · 現行回測：<a href="https://github.com/r381893/tw-etf-backtest">tw-etf-backtest</a></p>
+  </footer>
 
-        let projects = [];
-        let currentFilter = 'all';
-        let isAdminOpen = false;
-        let editingId = null;
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('projects-container');
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const adminToggle = document.getElementById('adminToggle');
-            const adminPanel = document.getElementById('adminPanel');
-            const closeAdmin = document.getElementById('closeAdmin');
-            const projectForm = document.getElementById('projectForm');
-            const clearFormBtn = document.getElementById('clearForm');
-
-            // 監聽 Firebase 資料變化
-            projectsRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    projects = Object.entries(data).map(([id, project]) => ({
-                        id,
-                        ...project
-                    })).sort((a, b) => (a.order || 999) - (b.order || 999));
-                }
-                renderProjects();
-                renderAdminList();
-            });
-
-            // 渲染專案卡片
-            function renderProjects() {
-                container.innerHTML = '';
-
-                const filteredProjects = currentFilter === 'all'
-                    ? projects
-                    : projects.filter(p => p.type === currentFilter);
-
-                if (filteredProjects.length === 0) {
-                    container.innerHTML = '<div class="loading">尚無專案</div>';
-                    return;
-                }
-
-                filteredProjects.forEach(project => {
-                    const card = createProjectCard(project);
-                    container.appendChild(card);
-                });
-            }
-
-            // 建立專案卡片
-            function createProjectCard(project) {
-                const card = document.createElement('div');
-                const isPlaceholder = project.type === 'future' || !project.url;
-                card.className = `project-card ${isPlaceholder ? 'placeholder' : ''}`;
-
-                // 從 Repo URL 提取資料夾名稱
-                let folderName = '';
-                if (project.repo) {
-                    const parts = project.repo.split('/');
-                    folderName = parts[parts.length - 1];
-                }
-
-                // 處理圖示 vs 圖片
-                let iconHtml = '';
-                if (project.image) {
-                    iconHtml = `<div class="card-image" style="background-image: url('${project.image}')"></div>`;
-                    card.classList.add('has-image');
-                } else {
-                    const isFontAwesome = (project.icon || '').includes('fa-');
-                    if (isFontAwesome) {
-                        iconHtml = `<i class="card-icon-fa ${project.icon}"></i>`;
-                    } else {
-                        iconHtml = `<span class="card-icon">${project.icon || '📁'}</span>`;
-                    }
-                }
-
-                card.innerHTML = `
-            <div class="card-header">
-                ${iconHtml}
-                <div class="card-title-group">
-                    <h3 class="card-title">${project.name}</h3>
-                    ${folderName ? `<span class="card-repo-name">📂 ${folderName}</span>` : ''}
-                </div>
-            </div>
-            <p class="card-description">${project.description || ''}</p>
-            <div class="card-footer">
-                <div class="card-actions">
-                    ${!isPlaceholder ? `
-                    <button class="action-btn local" onclick="copyProjectPath('${folderName || project.name}'); event.stopPropagation();">
-                        <i class="fa-solid fa-copy"></i> 複製路徑
-                    </button>
-                    ` : ''}
-                    
-                    ${project.url && !project.url.includes('localhost') && !isPlaceholder ? `
-                    <button class="action-btn cloud" onclick="window.open('${project.url}', '_blank'); event.stopPropagation();">
-                        <i class="fa-solid fa-cloud"></i> 雲端
-                    </button>
-                    ` : ''}
-                </div>
-
-                ${project.repo && !isPlaceholder ? `
-                    <a class="card-link" href="${project.repo}" target="_blank" onclick="event.stopPropagation()">
-                        <i class="fa-brands fa-github"></i>
-                    </a>
-                ` : ''}
-            </div>
-        `;
-
-                return card;
-            }
-
-            // 複製路徑功能
-            window.copyProjectPath = function (folderName) {
-                // 嘗試偵測目前網頁的路徑
-                // 如果是 file:///D:/網路版/Portfolio-Main/index.html
-                // 我們要抓的是 D:\網路版\ + folderName
-
-                let basePath = "";
-                try {
-                    // 解碼 URL (處理中文路徑)
-                    const pathname = decodeURIComponent(window.location.pathname);
-
-                    // 移除開頭的 / (Windows 上 file:/// 會有 /D:/...)
-                    let rawPath = pathname.startsWith('/') ? pathname.slice(1) : pathname;
-
-                    // 取得上一層目錄 (回到 "網路版" 層級)
-                    // 目前在 Portfolio-Main，所以要往上兩層找到根，或者往上一層找到同級資料夾
-                    // 假設結構: D:\網路版\Portfolio-Main\index.html
-                    // 目標: D:\網路版\目標資料夾
-
-                    const pathParts = rawPath.split('/');
-                    // 移除 index.html
-                    pathParts.pop();
-                    // 移除 Portfolio-Main (往上一層)
-                    pathParts.pop();
-
-                    // 重組路徑 (用反斜線給 Windows)
-                    basePath = pathParts.join('\\');
-                } catch (e) {
-                    basePath = "D:\\網路版"; // Fallback
-                }
-
-                const fullPath = `${basePath}\\${folderName}`;
-
-                // 嘗試在瀏覽器開啟該資料夾 (顯示檔案列表)
-                try {
-                    const pathForBrowser = 'file:///' + fullPath.replace(/\\/g, '/');
-                    window.open(pathForBrowser, '_blank');
-                } catch (e) {
-                    console.error("Browser blocked opening file URL");
-                }
-
-                // 執行複製 (作為備用)
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(fullPath).then(() => {
-                        // 這裡不跳 Alert 干擾了，改成 console log 或安靜失敗
-                        console.log("Path copied");
-                    }).catch(() => { });
-                }
-            };
-
-            // 渲染管理列表
-            function renderAdminList() {
-                const adminList = document.getElementById('adminList');
-                adminList.innerHTML = '<h3>現有專案</h3>';
-
-                projects.forEach(project => {
-                    const item = document.createElement('div');
-                    item.className = 'admin-item';
-
-                    // 列表圖示處理
-                    let listIcon = '';
-                    if (project.icon && project.icon.includes('fa-')) {
-                        listIcon = `<i class="${project.icon}"></i>`;
-                    } else {
-                        listIcon = project.icon || '📁';
-                    }
-
-                    item.innerHTML = `
-                <span class="admin-item-icon">${listIcon}</span>
-                <span class="admin-item-name">${project.name}</span>
-                <div class="admin-item-actions">
-                    <button class="btn-edit" onclick="editProject('${project.id}')">✏️</button>
-                    <button class="btn-delete" onclick="deleteProject('${project.id}')">🗑️</button>
-                </div>
-            `;
-                    adminList.appendChild(item);
-                });
-            }
-
-            // 篩選按鈕
-            filterButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    filterButtons.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentFilter = btn.dataset.filter;
-                    renderProjects();
-                });
-            });
-
-            // 管理面板開關
-            adminToggle.addEventListener('click', () => {
-                isAdminOpen = !isAdminOpen;
-                adminPanel.classList.toggle('open', isAdminOpen);
-            });
-
-            closeAdmin.addEventListener('click', () => {
-                isAdminOpen = false;
-                adminPanel.classList.remove('open');
-            });
-
-            // 表單提交
-            projectForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-
-                const projectData = {
-                    name: document.getElementById('projectName').value,
-                    description: document.getElementById('projectDesc').value,
-                    image: document.getElementById('projectImage').value, // 新增欄位
-                    icon: document.getElementById('projectIcon').value || 'fa-solid fa-folder',
-                    type: document.getElementById('projectType').value,
-                    url: document.getElementById('projectUrl').value,
-                    repo: document.getElementById('projectRepo').value,
-                    order: editingId ? projects.find(p => p.id === editingId)?.order : projects.length + 1
-                };
-
-                if (editingId) {
-                    projectsRef.child(editingId).update(projectData);
-                } else {
-                    projectsRef.push(projectData);
-                }
-
-                clearForm();
-            });
-
-            // 清除表單
-            clearFormBtn.addEventListener('click', clearForm);
-
-            function clearForm() {
-                projectForm.reset();
-                editingId = null;
-                document.getElementById('projectId').value = '';
-            }
-
-            // 全域函數
-            window.editProject = function (id) {
-                const project = projects.find(p => p.id === id);
-                if (!project) return;
-
-                editingId = id;
-                document.getElementById('projectId').value = id;
-                document.getElementById('projectName').value = project.name || '';
-                document.getElementById('projectDesc').value = project.description || '';
-                document.getElementById('projectImage').value = project.image || ''; // 新增欄位
-                document.getElementById('projectIcon').value = project.icon || '';
-                document.getElementById('projectType').value = project.type || 'pwa';
-                document.getElementById('projectUrl').value = project.url || '';
-                document.getElementById('projectRepo').value = project.repo || '';
-
-                // 滾動到表單
-                document.getElementById('projectForm').scrollIntoView({ behavior: 'smooth' });
-            };
-
-            window.deleteProject = function (id) {
-                if (confirm('確定要刪除這個專案嗎？')) {
-                    projectsRef.child(id).remove();
-                }
-            };
-        });
-    </script>
+  <script src="projects.js"></script>
+  <script src="app.js"></script>
 </body>
-
 </html>
